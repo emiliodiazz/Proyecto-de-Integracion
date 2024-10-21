@@ -3,29 +3,35 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
- 
- //Genera un Cliente Prisma
+
+//Genera un Cliente Prisma
 generator client {
   provider = "prisma-client-js"
 }
 
 //crea la tabla, en este caso seria usuario
 model User {
-  id            String          @id @default(cuid()) //CLAVE FORANEA
-  name          String?
+  id            String          @id @default(cuid()) //CLAVE Primaria
+  name          String
+  rut           String?         @unique
   username      String?         @unique
-  email         String?         @unique
+  email         String          @unique
   emailVerified DateTime?
   image         String?
+  phone         String?
+  rol_Id        String?
   accounts      Account[]
   sessions      Session[]
   // Optional for WebAuthn support
   Authenticator Authenticator[]
- 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  Ubicacion   Ubicacion? @relation(fields: [ubicacionId], references: [id])
+  ubicacionId String?
+  Roles       Roles?     @relation(fields: [rol_Id], references: [id])
 }
- 
+
 model Account {
   id                       String  @id @default(cuid())
   userId                   String  @unique
@@ -41,37 +47,37 @@ model Account {
   session_state            String?
   refresh_token_expires_in Int?
   user                     User?   @relation(fields: [userId], references: [id])
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
- 
+
   @@unique([provider, providerAccountId])
   @@index([userId])
 }
- 
+
 model Session {
   id           String   @id @default(cuid())
   sessionToken String   @unique
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id])
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
- 
+
   @@index([userId])
 }
- 
+
 model VerificationToken {
   identifier String
   token      String
   expires    DateTime
- 
+
   @@unique([identifier, token])
 }
- 
+
 // Optional for WebAuthn support
-model Authenticator {   
+model Authenticator {
   credentialID         String  @unique
   userId               String
   providerAccountId    String
@@ -80,9 +86,45 @@ model Authenticator {
   credentialDeviceType String
   credentialBackedUp   Boolean
   transports           String?
- 
- //clave FK
+
+  //clave FK
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@id([userId, credentialID])
+}
+
+model Roles {
+  id                  String   @id @unique @default(cuid())
+  Nombre_rol          String
+  Fecha_Registro      DateTime
+  Fecha_Actualizacion DateTime
+  User                User[]
+}
+
+model Estacionamiento {
+  id        String     @id @unique @default(cuid())
+  ubicacion String
+  estado    String
+  registro  Registro[]
+}
+
+model Registro {
+  id                 String          @id @unique @default(cuid())
+  entrada            DateTime
+  salida             DateTime
+  costo              String
+  estacionamiento_Id String          @unique
+  estacionamientos   Estacionamiento @relation(fields: [estacionamiento_Id], references: [id])
+  Ubicacion          Ubicacion[]
+}
+
+model Ubicacion {
+  id          String   @id @unique @default(cuid())
+  lat         String
+  long        String
+  referencia  String
+  usuario_Id  String
+  registro_Id String
+  registro    Registro @relation(fields: [registro_Id], references: [id])
+  User        User[]
 }

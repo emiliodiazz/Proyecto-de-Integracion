@@ -4,7 +4,7 @@ import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
 
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import L from 'leaflet'
+import L, { LatLngExpression } from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
 // Simulación de datos de usuarios en el mapa
@@ -25,7 +25,7 @@ export default function MapaParking() {
     }
 
     // Coordenadas de Curicó, Chile
-    const curicoPosition = [-34.9828, -71.2417]
+    const curicoPosition: LatLngExpression = [-34.9828, -71.2417]
 
     // Icono personalizado para los marcadores (ahora en rojo)
     const customIcon = new L.Icon({
@@ -50,7 +50,7 @@ export default function MapaParking() {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 {mapUsers.map((mapUser) => (
-                    <Marker key={mapUser.id} position={mapUser.position} icon={customIcon}>
+                    <Marker key={mapUser.id} position={mapUser.position as LatLngExpression} icon={customIcon}>
                         <Popup>
                             <div className="p-2">
                                 <h3 className="font-semibold mb-2">{mapUser.name}</h3>

@@ -71,7 +71,7 @@ export default function DashboardTest( { children }: { children: React.ReactNode
         <div className="p-4 flex items-center space-x-2">
           <img height={52} width={52} alt="imagen" src="/LogoCurico.png" />
           <span className={cn("text-xl font-bold transition-opacity duration-300", sidebarOpen ? "opacity-100" : "opacity-0")}>
-            Parcking System
+            Parking System
           </span>
         </div>
         <nav className="mt-8 flex-grow">
@@ -82,10 +82,12 @@ export default function DashboardTest( { children }: { children: React.ReactNode
             router.push("/dashboard/reporteria")
           }} />
           <MenuItem icon={<Eye size={20} />} label="Ver usuario" sidebarOpen={sidebarOpen} active={activeItem === "Ver usuario"} onClick={() => {
+            router.push("/dashboard/usuario/ver")
             setActiveItem("Ver usuario")
             console.log("Ver usuario")
           }} />
           <MenuItem icon={<UserPlus size={20} />} label="Agregar usuario" sidebarOpen={sidebarOpen} active={activeItem === "Agregar usuario"} onClick={() => {
+            router.push("/dashboard/usuario/agregar")
             setActiveItem("Agregar usuario")
             console.log("Agregar usuario")
           }} />

@@ -1,4 +1,4 @@
-import MapaParking from "@/components/mapa";
+import MapaParking from "@/components/Mapa";
 
 export default function Dashboard(){
   return(
