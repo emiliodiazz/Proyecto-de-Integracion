@@ -1,14 +1,19 @@
 -- CreateTable
 CREATE TABLE `User` (
     `id` VARCHAR(191) NOT NULL,
-    `name` VARCHAR(191) NULL,
+    `name` VARCHAR(191) NOT NULL,
+    `rut` VARCHAR(191) NULL,
     `username` VARCHAR(191) NULL,
-    `email` VARCHAR(191) NULL,
+    `email` VARCHAR(191) NOT NULL,
     `emailVerified` DATETIME(3) NULL,
     `image` VARCHAR(191) NULL,
+    `phone` VARCHAR(191) NULL,
+    `rol_Id` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
+    `ubicacionId` VARCHAR(191) NULL,
 
+    UNIQUE INDEX `User_rut_key`(`rut`),
     UNIQUE INDEX `User_username_key`(`username`),
     UNIQUE INDEX `User_email_key`(`email`),
     PRIMARY KEY (`id`)
@@ -82,24 +87,8 @@ CREATE TABLE `Roles` (
     `Nombre_rol` VARCHAR(191) NOT NULL,
     `Fecha_Registro` DATETIME(3) NOT NULL,
     `Fecha_Actualizacion` DATETIME(3) NOT NULL,
-    `users_Id` VARCHAR(191) NOT NULL,
 
     UNIQUE INDEX `Roles_id_key`(`id`),
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `Usuarios` (
-    `id` VARCHAR(191) NOT NULL,
-    `rut` VARCHAR(191) NOT NULL,
-    `nombre` VARCHAR(191) NOT NULL,
-    `apellido` VARCHAR(191) NOT NULL,
-    `telefono` VARCHAR(191) NULL,
-    `rol_Id` VARCHAR(191) NOT NULL,
-
-    UNIQUE INDEX `Usuarios_id_key`(`id`),
-    UNIQUE INDEX `Usuarios_rut_key`(`rut`),
-    UNIQUE INDEX `Usuarios_rol_Id_key`(`rol_Id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -136,10 +125,14 @@ CREATE TABLE `Ubicacion` (
     `registro_Id` VARCHAR(191) NOT NULL,
 
     UNIQUE INDEX `Ubicacion_id_key`(`id`),
-    UNIQUE INDEX `Ubicacion_usuario_Id_key`(`usuario_Id`),
-    UNIQUE INDEX `Ubicacion_registro_Id_key`(`registro_Id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `User` ADD CONSTRAINT `User_ubicacionId_fkey` FOREIGN KEY (`ubicacionId`) REFERENCES `Ubicacion`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `User` ADD CONSTRAINT `User_rol_Id_fkey` FOREIGN KEY (`rol_Id`) REFERENCES `Roles`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Account` ADD CONSTRAINT `Account_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -151,13 +144,7 @@ ALTER TABLE `Session` ADD CONSTRAINT `Session_userId_fkey` FOREIGN KEY (`userId`
 ALTER TABLE `Authenticator` ADD CONSTRAINT `Authenticator_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Usuarios` ADD CONSTRAINT `Usuarios_rol_Id_fkey` FOREIGN KEY (`rol_Id`) REFERENCES `Roles`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE `Registro` ADD CONSTRAINT `Registro_estacionamiento_Id_fkey` FOREIGN KEY (`estacionamiento_Id`) REFERENCES `Estacionamiento`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Ubicacion` ADD CONSTRAINT `Ubicacion_usuario_Id_fkey` FOREIGN KEY (`usuario_Id`) REFERENCES `Usuarios`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Ubicacion` ADD CONSTRAINT `Ubicacion_registro_Id_fkey` FOREIGN KEY (`registro_Id`) REFERENCES `Registro`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
