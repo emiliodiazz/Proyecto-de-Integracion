@@ -49,6 +49,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
     strategy: 'jwt',
   },
+ 
   callbacks: {
     async signIn({ user }: any) {
       // hacer lógica de verificación de email, si se usan credenciales.
@@ -69,16 +70,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.rol = token.rol
       return session
     },
-      /**
-       * @param  {string} url      URL provided as callback URL by the client
-       * @param  {string} baseUrl  Default base URL of site (can be used as fallback)
-       * @return {string}          URL the client will be redirect to
-       */
-    async redirect({url, baseUrl}) {
-        return url.startsWith(baseUrl)
-          ? url
-          : baseUrl
-      }
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url
+      return baseUrl
+    }
+    
   }
 })
 
