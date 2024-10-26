@@ -21,6 +21,12 @@ export default function Navbar() {
     event.preventDefault()
     // Aquí iría la lógica de inicio de sesión
     console.log('Iniciar sesión')
+    signIn('credentials', {
+      email: event.currentTarget.email.value,
+      password: event.currentTarget.password.value,
+    })
+
+
     setIsOpen(false)
   }
 

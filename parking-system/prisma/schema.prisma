@@ -16,6 +16,7 @@ model User {
   rut           String?         @unique
   username      String?         @unique
   email         String          @unique
+  passwordHash  String?
   emailVerified DateTime?
   image         String?
   phone         String?

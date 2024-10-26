@@ -72,6 +72,7 @@ export const PATCH = auth(async (req: Request) => {
   let body: any
   try {
     body = await req.json()
+    console.log(body)
 
     await prisma.user.update({
       where:{
