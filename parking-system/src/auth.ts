@@ -68,7 +68,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.id = token.id
       session.user.rol = token.rol
       return session
-    }
+    },
+      /**
+       * @param  {string} url      URL provided as callback URL by the client
+       * @param  {string} baseUrl  Default base URL of site (can be used as fallback)
+       * @return {string}          URL the client will be redirect to
+       */
+    async redirect({url, baseUrl}) {
+        return url.startsWith(baseUrl)
+          ? url
+          : baseUrl
+      }
   }
 })
 
